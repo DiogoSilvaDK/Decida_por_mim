@@ -1,33 +1,70 @@
-from flask import Flask, render_template, request, jsonify
-import webbrowser
+'''3. DECIDA POR MIM
+Objetivo: Crie um script que responda qualquer pergunta que for feita a ele. Recomendo 
+ter uma base de possíveis respostas (10-20 ou mais). 
+Ex: Será que devo sair de casa hoje? Seu script reponde: “Sim, vai lá!”
 
-app = Flask(__name__)
+Detalhes e boas Práticas:
 
-# Variável para armazenar o nome do usuário
-user_name = None
+Habilidades praticas a aplicar:
 
-@app.route('/')
-def home():
-    return render_template('chatbot.html')
+Listas
+Random
+Laços de Repetição
+Input de dados
+Saida de dados
+Geração de valores
+'''
 
-@app.route('/start_conversation', methods=['GET'])
-def start_conversation():
-    # Retorna a mensagem de saudação
-    return jsonify(message='Olá! Qual é o seu nome?')
+import random
+from time import sleep
 
-@app.route('/message', methods=['POST'])
-def message():
-    global user_name
-    # Pega a mensagem do corpo da requisição
-    message = request.get_json().get('message')
 
-    if user_name is None:
-        user_name = message
-        return {'response': 'Prazer em conhecer você, ' + user_name + '! eu sou um escravo de peças eletronicas entao vai logo falando oque vc quer?'}
+def converte_em_lista(arquivo, lista):
+    with open(arquivo, 'r', encoding='UTF8') as texto:
+        for linha in texto:
+            lista.append(str(linha).replace('\n', ''))
+        return lista
+        # print(lista)
 
-    return {'response': 'Ata, como meu criador não é muito bom nao consigo ainda ' + user_name + ',entao vai la no chat GPT por Hora!!'}
 
-if __name__ == '__main__':
-    webbrowser.open('http://localhost:5000')
-    app.run(debug=False)
+frases = []
 
+frases = converte_em_lista('ditados.txt', frases)
+
+# Inicio do programa
+print('Olá, qual é o seu nome?')
+sleep(1)
+player = input('Seu nome: ')
+sleep(1)
+print(f'Prazer em te conhecer { player } ')
+sleep(1)
+print(f'Sou o Guru Pythonico, me faça uma pergunta e te darei a resposta mais sabia!')
+jogar = True
+perguntas = []
+while jogar == True:
+    print(f'Quer fazer uma pergunta {player}?')
+    sleep(1)
+    print('Sim (1)')
+    print('Não (2)')
+    try:
+        resposta = int(input('Sua resposta: '))
+        sleep(1)
+        if resposta == 1:
+            print('Ok, então faça sua pergunta')
+            sleep(1)
+            pergunta = input('Sua pergunta: ')
+            if pergunta not in perguntas:
+                perguntas.append(pergunta)
+                sleep(2)
+                print('Hummm...')
+                for i in range(5):
+                    print('...')
+                    sleep(1)
+                resposta = frases[random.randint(0, len(frases))]
+                print(resposta)
+                sleep(5)
+        elif resposta == 2:
+            jogar = False
+            print(f'Ok, até a próxima { player }!')
+    except:
+        print('Resposta invalida, tente de novo')
